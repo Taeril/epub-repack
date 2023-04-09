@@ -11,7 +11,10 @@ include(SetupCompiler)
 find_package(fmt CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 
+find_package(Filesystem REQUIRED)
+
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in" "${CMAKE_CURRENT_BINARY_DIR}/version.hpp")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/filesystem.hpp.in" "${CMAKE_CURRENT_BINARY_DIR}/filesystem.hpp")
 
 add_executable(${PROJECT_NAME})
 
@@ -30,5 +33,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	fmt::fmt
 	cxxopts::cxxopts
+
+	std::filesystem
 )
 
