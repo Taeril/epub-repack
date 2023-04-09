@@ -31,6 +31,11 @@ int App::run(int argc, char** argv) {
 		replace_all(output, "{NAME}", name);
 		replace_all(output, "{EXT}", ext);
 
+		fs::path out(output);
+		if(fs::is_directory(out)) {
+			output = (out / filename).string();
+		}
+
 		xprint(1, "{} => {}\n",
 			xstyled(file, fg_bright_green),
 			xstyled(output, fg_yellow)

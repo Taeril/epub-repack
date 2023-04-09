@@ -100,6 +100,7 @@ int App::args(int argc, char** argv) {
 				cxxopts::value<int>(iterations_)->default_value("16"), "N")
 			("o,output",
 				"Output patern. Path with placeholder for output.\n"
+				"If pattern ends with '/' or output is directory then appends {FILENAME}\n"
 				"  {DIR}      - Path of directory with input file\n"
 				"  {FILENAME} - Input file name. Same as {NAME}{EXT}\n"
 				"  {NAME}     - Input file name without extension\n"
@@ -168,6 +169,10 @@ int App::args(int argc, char** argv) {
 					throw std::runtime_error(fmt::format("Unknown fix name: {}", fix));
 				}
 			}
+		}
+
+		if(output_pattern_[output_pattern_.size()-1] == '/') {
+			output_pattern_ += "{FILENAME}";
 		}
 	} catch(std::exception const& e) {
 		//fmt::print("Error:\n  {}\n\n{}\n", e.what(), options.help());
