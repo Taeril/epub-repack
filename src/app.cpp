@@ -11,7 +11,7 @@ static void replace_all(std::string& str, std::string const& from, std::string c
 
 int App::run(int argc, char** argv) {
 	int ret = args(argc, argv);
-	if(ret != 0) return ret;
+	if(ret != 0) return ret + 1;
 
 	for(auto const& file : files_) {
 		xprint(1, "File: {}\n", file);

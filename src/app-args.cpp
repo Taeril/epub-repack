@@ -192,7 +192,7 @@ int App::args(int argc, char** argv) {
 
 	if(help) {
 		fmt::print("{}\n", options.help());
-		return 0;
+		return -1;
 	}
 
 	if(version) {
@@ -201,7 +201,7 @@ int App::args(int argc, char** argv) {
 		xprint(2, "cxxopts v{}.{}.{}\n",
 			cxxopts::version.major, cxxopts::version.minor, cxxopts::version.patch
 		);
-		return 0;
+		return -1;
 	}
 
 	if(files_.empty()) {
