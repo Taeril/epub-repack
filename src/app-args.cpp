@@ -5,6 +5,10 @@
 #include <fmt/color.h>
 #include <cxxopts.hpp>
 
+// needed only for --version
+#include <pugixml.hpp>
+#include <libdeflate.h>
+//#include <zopfli.h> // TODO: where is version?
 
 #ifdef _WIN32
 #include <io.h>
@@ -29,14 +33,6 @@ unsigned version_minor() { return VERSION_MINOR; }
 unsigned version_patch() { return VERSION_PATCH; }
 unsigned version_number() {
 	return VERSION_MAJOR * 10000 + VERSION_MINOR * 100 + VERSION_PATCH;
-}
-
-inline std::string format_version(unsigned int version) {
-	return fmt::format("{}.{}.{}",
-		((version / 10000) % 100),
-		((version / 100) % 100),
-		(version % 100)
-	);
 }
 
 
@@ -197,10 +193,25 @@ int App::args(int argc, char** argv) {
 
 	if(version) {
 		xprint(1, "epub-repack v" VERSION "\n");
-		xprint(2, "fmt v{}\n", format_version(FMT_VERSION));
-		xprint(2, "cxxopts v{}.{}.{}\n",
+		xprint(2, "used libraries:\n");
+		xprint(2, " - fmt v{}.{}.{}\n",
+			((FMT_VERSION / 10000) % 100),
+			((FMT_VERSION / 100) % 100),
+			(FMT_VERSION % 100)
+		);
+		xprint(2, " - cxxopts v{}.{}.{}\n",
 			cxxopts::version.major, cxxopts::version.minor, cxxopts::version.patch
 		);
+		xprint(2, " - pugixml v{}.{}{}\n",
+			((PUGIXML_VERSION / 1000) % 100),
+			((PUGIXML_VERSION / 10) % 100),
+			(PUGIXML_VERSION % 10) ?
+				 std::string(".") + std::to_string(PUGIXML_VERSION % 10) : std::string()
+		);
+		xprint(2, " - libdeflate v" LIBDEFLATE_VERSION_STRING "\n");
+		xprint(2, " - zopfli v1.0.3\n"); // TODO: somehow determine zopfli version
+		
+
 		return -1;
 	}
 

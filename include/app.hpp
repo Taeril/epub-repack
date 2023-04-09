@@ -7,6 +7,8 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 
+#include "zip.hpp"
+
 class App {
 public:
 	int run(int argc, char** argv);
@@ -30,6 +32,10 @@ private:
 	unsigned fixes_ = ~0u;
 
 	int args(int argc, char** argv);
+
+	void fix_series(Zip& zip);
+
+	void save_zip(Zip& zip, std::string const& filename);
 
 	template<typename S, typename... Args>
 	inline void xprint(int level, const S& format_str, const Args&... args) {

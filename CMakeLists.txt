@@ -10,6 +10,9 @@ include(SetupCompiler)
 
 find_package(fmt CONFIG REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
+find_package(pugixml CONFIG REQUIRED)
+find_package(libdeflate CONFIG REQUIRED)
+find_package(Zopfli CONFIG REQUIRED)
 
 find_package(Filesystem REQUIRED)
 
@@ -28,12 +31,17 @@ target_sources(${PROJECT_NAME} PRIVATE
 	"src/main.cpp"
 	"src/app.cpp"
 	"src/app-args.cpp"
+	"src/utils.cpp"
+	"src/xml.cpp"
+	"src/zip.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	fmt::fmt
 	cxxopts::cxxopts
-
+	pugixml::pugixml
+	libdeflate::libdeflate_static
+	zopfli::zopfli
 	std::filesystem
 )
 
