@@ -16,6 +16,12 @@ find_package(Zopfli CONFIG REQUIRED)
 
 find_package(Filesystem REQUIRED)
 
+message(STATUS "fmt: ${fmt_VERSION}")
+message(STATUS "cxxopts: ${cxxopts_VERSION}")
+message(STATUS "pugixml: ${pugixml_VERSION}")
+message(STATUS "libdeflate: ${libdeflate_VERSION}")
+message(STATUS "Zopfli: ${Zopfli_VERSION}")
+
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in" "${CMAKE_CURRENT_BINARY_DIR}/version.hpp")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/filesystem.hpp.in" "${CMAKE_CURRENT_BINARY_DIR}/filesystem.hpp")
 
