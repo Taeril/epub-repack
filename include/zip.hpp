@@ -6,7 +6,7 @@
 #include <cstdint>
 
 struct LFH {
-	/*  0 */ uint32_t signature;          // 0x04034b50
+	/*  0 */ uint32_t signature;  // 0x04034b50
 	/*  4 */ uint16_t version;
 	/*  6 */ uint16_t bit_flag;
 	/*  8 */ uint16_t compression_method;
@@ -30,7 +30,7 @@ struct LFH {
 };
 
 struct CDFH {
-	/*  0 */ uint32_t signature;          // 0x02014b50
+	/*  0 */ uint32_t signature;  // 0x02014b50
 	/*  4 */ uint16_t version_made_by;
 	/*  6 */ uint16_t version_needed;
 
@@ -57,7 +57,7 @@ struct CDFH {
 	std::string file_name;
 	std::string_view extra_field;
 	std::string_view file_comment;
-	
+
 	CDFH() = default;
 	CDFH(std::string const& str, size_t offset);
 	void print();
@@ -80,7 +80,6 @@ struct EOCD {
 	EOCD(std::string const& str, size_t offset);
 	void print();
 };
-
 
 struct File {
 	CDFH cdfh;

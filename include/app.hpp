@@ -37,6 +37,8 @@ private:
 
 	void save_zip(Zip& zip, std::string const& filename);
 
+	// clang-format off
+
 	template<typename S, typename... Args>
 	inline void xprint(int level, const S& format_str, const Args&... args) {
 		if(log_level_ > 0 && level <= log_level_) {
@@ -52,6 +54,8 @@ private:
 	inline fmt::text_style xcolor(fmt::text_style ts) {
 		return color_ ? ts : fmt::text_style{};
 	}
+
+	// clang-format on
 
 	static FMT_CONSTEXPR fmt::text_style fg_blue = fmt::fg(fmt::terminal_color::blue);
 	static FMT_CONSTEXPR fmt::text_style fg_bright_black = fmt::fg(fmt::terminal_color::bright_black);

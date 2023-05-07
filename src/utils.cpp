@@ -17,6 +17,8 @@ void write_file(std::string const& path, std::string const& str) {
 	file.write(str.data(), str.size());
 }
 
+// clang-format off
+
 uint32_t read4(std::string const& str, size_t offset) {
 	return 
 		(uint32_t(uint8_t(str[offset+0])) << 0)  |
@@ -47,10 +49,10 @@ void write2(std::ofstream& ofs, uint16_t value) {
 		static_cast<uint8_t>(value >> 0),
 		static_cast<uint8_t>(value >> 8),
 	};
-	//fmt::print(ofs, "{}{}", char(v[0]), char(v[1]));
 	ofs.write(reinterpret_cast<const char*>(v), 2);
 }
 
+// clang-format on
 
 std::string compress(std::string_view str) {
 	ZopfliOptions zo;
@@ -60,10 +62,12 @@ std::string compress(std::string_view str) {
 	const unsigned char* in = reinterpret_cast<const unsigned char*>(str.data());
 	size_t out_size = 0;
 	unsigned char* out = nullptr;
+	// clang-format off
 	ZopfliCompress(&zo, ZOPFLI_FORMAT_DEFLATE,
 		in, str.size(),
 		&out, &out_size
 	);
+	// clang-format on
 
 	std::string ret(reinterpret_cast<char*>(out), out_size);
 	free(out);
@@ -78,7 +82,7 @@ uint32_t crc32(const std::string_view str) {
 	while(len-- != 0) {
 		crc ^= *p++;
 
-		for(int i=0; i<8; ++i) {
+		for(int i = 0; i < 8; ++i) {
 			crc = (crc >> 1) ^ (-int32_t(crc & 1) & 0xEDB88320);
 		}
 	}

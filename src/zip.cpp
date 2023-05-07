@@ -41,7 +41,7 @@ void LFH::print() {
 	fmt::print(" - uncompressed_size:  {:08X}\n", uncompressed_size);
 	fmt::print(" - file_name_length:   {:04X}\n", file_name_length);
 	fmt::print(" - extra_field_length: {:04X}\n", extra_field_length);
-					
+
 
 	fmt::print(" - file name({}): {}\n", file_name.size(), file_name);
 	fmt::print(" - extra field({}): {}\n", extra_field.size(), extra_field);
@@ -62,7 +62,7 @@ CDFH::CDFH(std::string const& str, size_t offset) :
 	uncompressed_size(read4(str, offset + 24)),
 	file_name_length(read2(str, offset + 28)),
 	extra_field_length(read2(str, offset + 30)),
-					 
+
 	file_comment_length(read2(str, offset + 32)),
 	disk_number(read2(str, offset + 34)),
 	internal_file_attributes(read2(str, offset + 36)),
@@ -89,7 +89,7 @@ void CDFH::print() {
 	fmt::print(" - uncompressed_size:        {:08X}\n", uncompressed_size);
 	fmt::print(" - file_name_length:         {:04X}\n", file_name_length);
 	fmt::print(" - extra_field_length:       {:04X}\n", extra_field_length);
-					
+
 	fmt::print(" - file_comment_length:      {:04X}\n", file_comment_length);
 	fmt::print(" - disk_number:              {:04X}\n", disk_number);
 	fmt::print(" - internal_file_attributes: {:04X}\n", internal_file_attributes);
@@ -153,14 +153,16 @@ Zip::Zip(std::string const& path) {
 
 			auto d = libdeflate_alloc_decompressor();
 			size_t ret;
+			// clang-format off
 			libdeflate_deflate_decompress(d,
 				content.data() + file_content_pos, lfh.compressed_size,
 				file.content.data(), file.content.size(),
 				&ret
 			);
+			// clang-format on
 			libdeflate_free_decompressor(d);
 		} else {
-			throw std::runtime_error("unsupported compression metod");;
+			throw std::runtime_error("unsupported compression metod");
 		}
 
 		files.push_back(file);

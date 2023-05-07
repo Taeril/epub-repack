@@ -3,29 +3,29 @@
 #include <fmt/core.h>
 
 class StrWriter : public pugi::xml_writer {
-	public:
-		void write(const void* data, size_t size) override {
-			output.append(std::string(static_cast<const char*>(data), size));
-		}
+public:
+	void write(const void* data, size_t size) override {
+		output.append(std::string(static_cast<const char*>(data), size));
+	}
 
-		std::string str(pugi::xml_document const& doc) {
-			doc.print(*this);
-			return output;
-		}
-	private:
-		std::string output;
+	std::string str(pugi::xml_document const& doc) {
+		doc.print(*this);
+		return output;
+	}
+
+private:
+	std::string output;
 };
 
 inline std::string doc_to_string(pugi::xml_document const& doc) {
 	return StrWriter().str(doc);
 }
 
-
 XML::XML(std::string_view const& xml) {
 	pugi::xml_parse_result result = doc.load_buffer(xml.data(), xml.size());
 	if(!result) {
 		fmt::print(stderr, "ERROR: {}", result.description());
-		throw 1;
+		throw 1;  // TODO: throw error
 	}
 }
 
@@ -35,7 +35,9 @@ std::string XML::to_string() {
 
 std::string XML::get_rootfile() {
 	auto rootfile = doc.child("container").child("rootfiles").child("rootfile");
-	if(!rootfile) throw 1;
+	if(!rootfile) {
+		throw 1;  // TODO: throw error
+	}
 	return rootfile.attribute("full-path").value();
 }
 
@@ -62,11 +64,11 @@ std::string XML::fix_metadata() {
 	// Make <meta> tags with names calibre:series and calibre:series_index lats two in <metadata>.
 	// Also make it in that order.
 	if(series) {
-		//fix_name_content(series);
+		// fix_name_content(series);
 		metadata.append_move(series);
 	}
 	if(index) {
-		//fix_name_content(index);
+		// fix_name_content(index);
 		metadata.append_move(index);
 	}
 

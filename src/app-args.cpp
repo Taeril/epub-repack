@@ -21,6 +21,7 @@
 #endif
 
 
+// clang-format off
 // version
 std::string version() { return VERSION; }
 unsigned version_major() { return VERSION_MAJOR; }
@@ -30,15 +31,18 @@ unsigned version_number() {
 	return VERSION_MAJOR * 10000 + VERSION_MINOR * 100 + VERSION_PATCH;
 }
 
+// clang-format on
 
 static bool use_color() {
 	return isatty(fileno(stdout));
 }
 
 static std::string str_tolower(std::string str) {
+	// clang-format off
 	std::transform(str.begin(), str.end(), str.begin(),
 		[](unsigned char c){ return std::tolower(c); }
 	);
+	// clang-format on
 
 	return str;
 }
@@ -46,12 +50,14 @@ static std::string str_tolower(std::string str) {
 static bool opt_is_true(std::string value) {
 	const auto v = str_tolower(value);
 
+	// clang-format off
 	if(v == "true") return true;
 	if(v == "yes") return true;
 	if(v == "always") return true;
 	if(v == "1") return true;
 	if(v == "t") return true;
 	return false;
+	// clang-format on
 }
 
 // static bool opt_is_false(std::string value) {
@@ -70,9 +76,8 @@ static bool opt_is_num(std::string const& value) {
 }
 
 static constexpr std::underlying_type<App::Fix>::type fix2num(App::Fix fix) noexcept {
-    return static_cast<std::underlying_type<App::Fix>::type>(fix);
+	return static_cast<std::underlying_type<App::Fix>::type>(fix);
 }
-
 
 int App::args(int argc, char** argv) {
 	cxxopts::Options options("epub-repack", "epub-repack (v" VERSION "):\n  Fix and repack epub files\n");
@@ -87,6 +92,7 @@ int App::args(int argc, char** argv) {
 		options.positional_help("FILE...");
 		options.set_width(120);
 
+		// clang-format off
 		options.add_options()
 			("f,fix",
 				"Apply fixes:\n"
@@ -117,14 +123,13 @@ int App::args(int argc, char** argv) {
 				cxxopts::value<bool>(version)->default_value("false"))
 			("files", "files...", cxxopts::value<std::vector<std::string>>(files_))
 		;
+		// clang-format on
 
 		options.parse_positional({"files"});
 
 		auto result = options.parse(argc, argv);
 
-		//help = result.count("help") > 0;
 		help = result["help"].as<bool>();
-		//version = result.count("version") > 0;
 		version = result["version"].as<bool>();
 
 		log_level_ = std::min(int(result.count("verbose") + 1), 3);
@@ -171,16 +176,18 @@ int App::args(int argc, char** argv) {
 			}
 		}
 
-		if(output_pattern_[output_pattern_.size()-1] == '/') {
+		if(output_pattern_[output_pattern_.size() - 1] == '/') {
 			output_pattern_ += "{FILENAME}";
 		}
 	} catch(std::exception const& e) {
+		// clang-format off
 		//fmt::print("Error:\n  {}\n\n{}\n", e.what(), options.help());
 		fmt::print("{}\n  {}\n\n{}\n",
 			xstyled("Error:", fg_red),
 			xstyled(e.what(), fg_red),
 			options.help()
 		);
+		// clang-format on
 		return 1;
 	}
 
@@ -204,11 +211,13 @@ int App::args(int argc, char** argv) {
 	}
 
 	if(files_.empty()) {
+		// clang-format off
 		//fmt::print("Error:\n  Missing files to work on...\n\n{}\n", options.help());
 		fmt::print("\n\n{}\n",
 			xstyled("Error:\n  Missing files to work on...", fg_red), 
 			options.help()
 		);
+		// clang-format on
 		return 1;
 	}
 

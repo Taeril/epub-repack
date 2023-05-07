@@ -6,16 +6,18 @@
 #include "utils.hpp"
 
 static void replace_all(std::string& str, std::string const& from, std::string const& to) {
-    std::string::size_type pos = 0;
-    while((pos = str.find(from, pos)) != std::string::npos) {
-        str.replace(pos, from.length(), to);
-        pos += to.length() - from.length() + 1;
-    }
+	std::string::size_type pos = 0;
+	while((pos = str.find(from, pos)) != std::string::npos) {
+		str.replace(pos, from.length(), to);
+		pos += to.length() - from.length() + 1;
+	}
 }
 
 int App::run(int argc, char** argv) {
 	int ret = args(argc, argv);
-	if(ret != 0) return ret + 1;
+	if(ret != 0) {
+		return ret + 1;
+	}
 
 	for(auto const& file : files_) {
 		fs::path p(file);
@@ -23,7 +25,9 @@ int App::run(int argc, char** argv) {
 		std::string name = p.stem().string();
 		std::string ext = p.extension().string();
 		std::string dir = p.parent_path().string();
-		if(dir.empty()) dir = ".";
+		if(dir.empty()) {
+			dir = ".";
+		}
 
 		std::string output(output_pattern_);
 		replace_all(output, "{DIR}", dir);
@@ -36,11 +40,13 @@ int App::run(int argc, char** argv) {
 			output = (out / filename).string();
 		}
 
+		// clang-format off
 		xprint(1, "{} => {}\n",
 			xstyled(file, fg_bright_green),
 			xstyled(output, fg_yellow)
 		);
-		
+		// clang-format on
+
 		Zip zip{file};
 
 		fix_series(zip);
@@ -52,10 +58,11 @@ int App::run(int argc, char** argv) {
 }
 
 constexpr std::underlying_type<App::Fix>::type fix2num(App::Fix fix) noexcept {
-    return static_cast<std::underlying_type<App::Fix>::type>(fix);
+	return static_cast<std::underlying_type<App::Fix>::type>(fix);
 }
 
 void App::print_info() {
+	// clang-format off
 	xprint(3,
 		"App {{\n"
 		"  output_pattern: ... {}\n"
@@ -80,6 +87,7 @@ void App::print_info() {
 		);
 	}
 	xprint(3, "END\n");
+	// clang-format on
 }
 
 void App::fix_series(Zip& zip) {
@@ -108,16 +116,17 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 	std::vector<uint32_t> offsets;
 	uint32_t pos = 0;
 
-	for(size_t i=0; i < zip.files.size(); ++i) {
+	for(size_t i = 0; i < zip.files.size(); ++i) {
 		LFH& lfh = zip.files[i].lfh;
 
-		xprint(2, "LFH({}/{}): {}\n", i+1, zip.files.size(), lfh.file_name);
-		
+		xprint(2, "LFH({}/{}): {}\n", i + 1, zip.files.size(), lfh.file_name);
+
 		std::string v;
 		if(lfh.compression_method == 8) {
 			v = compress(zip.files[i].content);
 			uint32_t v_size = static_cast<uint32_t>(v.size());
 			auto d_size = lfh.compressed_size - v_size;
+			// clang-format off
 			xprint(2, " - zopfli saved {} bytes\n",
 				xstyled(d_size,
 					d_size > 0 ? fg_green :
@@ -125,6 +134,7 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 					fg_red
 				)
 			);
+			// clang-format on
 			lfh.compressed_size = v_size;
 		} else if(lfh.compression_method == 0) {
 			xprint(2, " - store\n");
@@ -159,11 +169,11 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 
 	uint32_t cdfh_pos = pos;
 
-	for(size_t i=0; i < zip.files.size(); ++i) {
+	for(size_t i = 0; i < zip.files.size(); ++i) {
 		LFH& lfh = zip.files[i].lfh;
 		CDFH& cdfh = zip.files[i].cdfh;
 
-		xprint(2, "CDFH({}/{}): {}\n", i+1, zip.files.size(), lfh.file_name);
+		xprint(2, "CDFH({}/{}): {}\n", i + 1, zip.files.size(), lfh.file_name);
 
 		write4(ofs, cdfh.signature);
 		write2(ofs, cdfh.version_made_by);
