@@ -1,8 +1,8 @@
 [requires]
-fmt/9.1.0
+fmt/10.0.0
 cxxopts/3.1.1
 pugixml/1.13
-libdeflate/1.17
+libdeflate/1.18
 zopfli/1.0.3
 
 [generators]
