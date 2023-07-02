@@ -28,6 +28,9 @@ int App::run(int argc, char** argv) {
 		if(dir.empty()) {
 			dir = ".";
 		}
+		if(!ext.empty() && ext[0] == '.') {
+			ext = ext.substr(1);
+		}
 
 		std::string output(output_pattern_);
 		replace_all(output, "{DIR}", dir);

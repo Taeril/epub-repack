@@ -108,7 +108,7 @@ int App::args(int argc, char** argv) {
 				"Output patern. Path with placeholder for output.\n"
 				"If pattern ends with '/' or output is directory then appends {FILENAME}\n"
 				"  {DIR}      - Path of directory with input file\n"
-				"  {FILENAME} - Input file name. Same as {NAME}{EXT}\n"
+				"  {FILENAME} - Input file name. Same as {NAME}.{EXT}\n"
 				"  {NAME}     - Input file name without extension\n"
 				"  {EXT}      - Input File extension\n",
 				cxxopts::value<std::string>(output_pattern_)->default_value("{NAME}.epub"),
