@@ -43,7 +43,11 @@ int App::run(int argc, char** argv) {
 			fs::create_directories(out.parent_path());
 		}
 		if(fs::is_directory(out)) {
-			output = (out / filename).string();
+			out.append(filename);
+			output = out.string();
+		}
+		if(fs::exists(out) && !fs::is_regular_file(out)) {
+			throw std::runtime_error(fmt::format("\"{}\" exists and is not regular file", output));
 		}
 
 		// clang-format off
@@ -53,7 +57,19 @@ int App::run(int argc, char** argv) {
 		);
 		// clang-format on
 
+		if(!fs::exists(p)) {
+			throw std::runtime_error(fmt::format("File \"{}\" not found", file));
+		}
+		if(!fs::is_regular_file(p)) {
+			throw std::runtime_error(fmt::format("\"{}\" is not a file", file));
+		}
+
 		Zip zip{file};
+
+		File* container_xml = zip.find_file("META-INF/container.xml");
+		if(!container_xml) {
+			throw std::runtime_error(fmt::format("Not an epub file: \"{}\"", file));
+		}
 
 		fix_series(zip);
 

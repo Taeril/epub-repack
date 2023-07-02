@@ -2,6 +2,8 @@
 
 #include <fmt/core.h>
 
+#include <exception>
+
 class StrWriter : public pugi::xml_writer {
 public:
 	void write(const void* data, size_t size) override {
@@ -24,8 +26,7 @@ inline std::string doc_to_string(pugi::xml_document const& doc) {
 XML::XML(std::string_view const& xml) {
 	pugi::xml_parse_result result = doc.load_buffer(xml.data(), xml.size());
 	if(!result) {
-		fmt::print(stderr, "ERROR: {}", result.description());
-		throw 1;  // TODO: throw error
+		throw std::runtime_error(fmt::format("XML: {}", result.description()));
 	}
 }
 
@@ -36,7 +37,7 @@ std::string XML::to_string() {
 std::string XML::get_rootfile() {
 	auto rootfile = doc.child("container").child("rootfiles").child("rootfile");
 	if(!rootfile) {
-		throw 1;  // TODO: throw error
+		throw std::runtime_error(fmt::format("XML: rootfile not found"));
 	}
 	return rootfile.attribute("full-path").value();
 }

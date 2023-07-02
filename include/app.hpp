@@ -37,6 +37,7 @@ private:
 
 	void save_zip(Zip& zip, std::string const& filename);
 
+public:
 	// clang-format off
 
 	template<typename S, typename... Args>
