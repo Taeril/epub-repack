@@ -39,6 +39,9 @@ int App::run(int argc, char** argv) {
 		replace_all(output, "{EXT}", ext);
 
 		fs::path out(output);
+		if(!fs::exists(out.parent_path())) {
+			fs::create_directories(out.parent_path());
+		}
 		if(fs::is_directory(out)) {
 			output = (out / filename).string();
 		}
