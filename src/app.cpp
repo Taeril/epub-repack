@@ -116,6 +116,13 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 	std::vector<uint32_t> offsets;
 	uint32_t pos = 0;
 
+	auto write_str = [&ofs](std::string_view const& str) {
+		// Hide warning about conversion changing signedness
+		// write() accepts parameter of type streamsize (signed)
+		// but size() return size_t (unsigned)
+		ofs.write(str.data(), static_cast<std::streamsize>(str.size()));
+	};
+
 	for(size_t i = 0; i < zip.files.size(); ++i) {
 		LFH& lfh = zip.files[i].lfh;
 
@@ -152,17 +159,17 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 		write2(ofs, lfh.file_name_length);
 		write2(ofs, lfh.extra_field_length);
 
-		ofs.write(lfh.file_name.data(), lfh.file_name.size());
-		ofs.write(lfh.extra_field.data(), lfh.extra_field.size());
+		write_str(lfh.file_name);
+		write_str(lfh.extra_field);
 
 		offsets.push_back(pos);
 		pos += 30 + lfh.file_name_length + lfh.extra_field_length;
 
 		if(lfh.compression_method == 8) {
-			ofs.write(v.data(), v.size());
+			write_str(v);
 			pos += static_cast<uint32_t>(v.size());
 		} else {
-			ofs.write(lfh.data.data(), lfh.data.size());
+			write_str(lfh.data);
 			pos += static_cast<uint32_t>(lfh.data.size());
 		}
 	}
@@ -195,9 +202,9 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 		write4(ofs, cdfh.external_file_attributes);
 		write4(ofs, offsets[i]);
 
-		ofs.write(lfh.file_name.data(), lfh.file_name.size());
-		ofs.write(cdfh.extra_field.data(), cdfh.extra_field.size());
-		ofs.write(cdfh.file_comment.data(), cdfh.file_comment.size());
+		write_str(lfh.file_name);
+		write_str(cdfh.extra_field);
+		write_str(cdfh.file_comment);
 
 		pos += 46 + lfh.file_name_length + cdfh.extra_field_length + cdfh.file_comment_length;
 	}
@@ -215,6 +222,6 @@ void App::save_zip(Zip& zip, std::string const& filename) {
 	write4(ofs, cdfh_pos);
 	write2(ofs, eocd.comment_length);
 
-	ofs.write(eocd.comment.data(), eocd.comment.size());
+	write_str(eocd.comment);
 }
 
