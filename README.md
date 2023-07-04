@@ -21,7 +21,7 @@ Usage:
   -o, --output PATH        Output patern. Path with placeholder for output.
                            If pattern ends with '/' or output is directory then appends {FILENAME}
                              {DIR}      - Path of directory with input file
-                             {FILENAME} - Input file name. Same as {NAME}{EXT}
+                             {FILENAME} - Input file name. Same as {NAME}.{EXT}
                              {NAME}     - Input file name without extension
                              {EXT}      - Input File extension
                             (default: {NAME}.epub)
