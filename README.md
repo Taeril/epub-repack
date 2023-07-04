@@ -69,6 +69,7 @@ But it's quite generic that it might help to build in other environments.
 ```sh
 build_dir=build
 conan install . -of "$build_dir/conan" --build=missing
+. "$build_dir/conan/conanbuild.sh"
 cmake -B "$build_dir" -G Ninja -DCMAKE_BUILD_TYPE=Release --toolchain "$build_dir/conan/conan_toolchain.cmake"
 cmake --build "$build_dir" --config Release
 ```
