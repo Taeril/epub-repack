@@ -129,7 +129,7 @@ int App::args(int argc, char** argv) {
 
 		auto result = options.parse(argc, argv);
 
-		help = result["help"].as<bool>();
+		help = result["help"].as<bool>() || (argc < 2);
 		version = result["version"].as<bool>();
 
 		log_level_ = std::min(int(result.count("verbose") + 1), 3);
