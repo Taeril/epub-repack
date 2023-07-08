@@ -51,3 +51,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	std::filesystem
 )
 
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
